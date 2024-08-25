@@ -1,6 +1,7 @@
 package org.liao.distributed_lock_demo.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.client.protocol.RedisCommands;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisCallback;
@@ -107,7 +108,7 @@ public class RedisLockUtils {
         Boolean result = stringRedisTemplate.execute((RedisCallback<Boolean>) connection -> {
             RedisSerializer<String> valueSerializer = (RedisSerializer<String>) stringRedisTemplate.getValueSerializer();
             RedisSerializer<String> keySerializer = (RedisSerializer<String>) stringRedisTemplate.getKeySerializer();
-            Object obj = connection.execute("set",
+            Object obj = connection.execute(RedisCommands.SET.getName(),
                     keySerializer.serialize(key),
                     valueSerializer.serialize(value),
                     "NX".getBytes(StandardCharsets.UTF_8),
